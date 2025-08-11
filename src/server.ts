@@ -8,87 +8,116 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Get Chuck Norris joke tool
-const getChuckJoke = server.tool(
-  "get-chuck-joke",
-  "Get a random Chuck Norris joke",
+const baseURL = "https://fluffy-spork-gx4747wpjpwcvx4w-3001.app.github.dev/api/";
+
+const getClient = server.tool(
+  "get-client-list",
+  "Get list of client from LENS",
   async () => {
-    const response = await fetch("https://api.chucknorris.io/jokes/random");
-    const data = await response.json();
-    return {
-      content: [
-        {
-          type: "text",
-          text: data.value,
-        },
-      ],
-    };
+    const response = await fetch(`${baseURL}client`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
   }
 );
 
-// Get Chuck Norris joke by category tool
-const getChuckJokeByCategory = server.tool(
-  "get-chuck-joke-by-category",
-  "Get a random Chuck Norris joke by category",
+const getAnnouncements = server.tool(
+  "get-announcements-by-account",
+  "Get announcements for a given account",
   {
-    category: z.string().describe("Category of the Chuck Norris joke"),
+    uduns: z.string().describe("Account Global ultimate duns number (uduns)"),
   },
-  async (params: { category: string }) => {
-    const response = await fetch(
-      `https://api.chucknorris.io/jokes/random?category=${params.category}`
-    );
-    const data = await response.json();
-    return {
-      content: [
-        {
-          type: "text",
-          text: data.value,
-        },
-      ],
-    };
+  async (params: { uduns: string }) => {
+    const response = await fetch(`${baseURL}announcements/${params.uduns}`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
   }
 );
 
-// Get Chuck Norris joke categories tool
-const getChuckCategories = server.tool(
-  "get-chuck-categories",
-  "Get all available categories for Chuck Norris jokes",
-  async () => {
-    const response = await fetch("https://api.chucknorris.io/jokes/categories");
-    const data = await response.json();
-    return {
-      content: [
-        {
-          type: "text",
-          text: data.join(", "),
-        },
-      ],
-    };
+const getEYActivities = server.tool(
+  "get-ey-activities-by-account",
+  "Get EY activities histogram for a given account",
+  {
+    uduns: z.string().describe("Account Global ultimate duns number (uduns)"),
+  },
+  async (params: { uduns: string }) => {
+    const response = await fetch(`${baseURL}eyactivitieshistogram/${params.uduns}`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
   }
 );
 
-// Get Dad joke tool
-const getDadJoke = server.tool(
-  "get-dad-joke",
-  "Get a random dad joke",
-  async () => {
-    const response = await fetch("https://icanhazdadjoke.com/", {
-      headers: {
-        Accept: "application/json",
-      },
-    });
-    const data = await response.json();
-    return {
-      content: [
-        {
-          type: "text",
-          text: data.joke,
-        },
-      ],
-    };
+const getForecast = server.tool(
+  "get-forecast-by-account",
+  "Get forecast for a given account",
+  {
+    uduns: z.string().describe("Account Global ultimate duns number (uduns)"),
+  },
+  async (params: { uduns: string }) => {
+    const response = await fetch(`${baseURL}forecast/${params.uduns}`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
   }
 );
 
+const getImpact = server.tool(
+  "get-impact-by-account",
+  "Get impact for a given account",
+  {
+    uduns: z.string().describe("Account Global ultimate duns number (uduns)"),
+  },
+  async (params: { uduns: string }) => {
+    const response = await fetch(`${baseURL}impact/${params.uduns}`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
+  }
+);
+
+const getMeetingActivity = server.tool(
+  "get-meeting-activity-by-account",
+  "Get meeting activity histogram for a given account",
+  {
+    uduns: z.string().describe("Account Global ultimate duns number (uduns)"),
+  },
+  async (params: { uduns: string }) => {
+    const response = await fetch(`${baseURL}meetingactivityhistogram/${params.uduns}`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
+  }
+);
+
+const getPipelineDetails = server.tool(
+  "get-pipeline-details-by-account",
+  "Get pipeline details for a given account",
+  {
+    uduns: z.string().describe("Account Global ultimate duns number (uduns)"),
+  },
+  async (params: { uduns: string }) => {
+    const response = await fetch(`${baseURL}pipelineDetails/${params.uduns}`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
+  }
+);
+
+const getTopInsights = server.tool(
+  "get-top-insights-by-account",
+  "Get top insights for a given account",
+  {
+    uduns: z.string().describe("Account Global ultimate duns number (uduns)"),
+  },
+  async (params: { uduns: string }) => {
+    const response = await fetch(`${baseURL}topinsights/${params.uduns}`);
+    const output = await response.json();
+    const data = output.result;
+    return { content: [{ type: "text", text: data }] };
+  }
+);
 const app = express();
 app.use(express.json());
 
